@@ -1,0 +1,6 @@
+@EndUserText.label: 'ZZC_ATTACHMENT'
+@MappingRole: true
+define role ZZC_ATTACHMENT {
+  grant select on ZZC_ATTACHMENT
+  where INHERITING CONDITIONS FROM ENTITY ZZR_ATTACHMENT DEFAULT TRUE;
+}

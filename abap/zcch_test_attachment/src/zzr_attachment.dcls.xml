@@ -1,0 +1,6 @@
+@EndUserText.label: 'ZZR_ATTACHMENT'
+@MappingRole: true
+define role ZZR_ATTACHMENT {
+  grant select on ZZR_ATTACHMENT
+  where TRUE;
+}

@@ -1,0 +1,15 @@
+class ZZBP_C_ATTACHMENT definition
+  public
+  abstract
+  final
+  for behavior of ZZC_ATTACHMENT .
+
+public section.
+protected section.
+private section.
+ENDCLASS.
+
+
+
+CLASS ZZBP_C_ATTACHMENT IMPLEMENTATION.
+ENDCLASS.

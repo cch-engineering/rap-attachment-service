@@ -1,0 +1,11 @@
+@EndUserText: {
+  label: 'Service Definition for ZZC_ATTACHMENT'
+}
+@ObjectModel: {
+  leadingEntity: {
+    name: 'ZZC_ATTACHMENT'
+  }
+}
+define service ZZUI_CCHATTACH_O4 provider contracts odata_v4_ui {
+  expose ZZC_ATTACHMENT as Attachment;
+}

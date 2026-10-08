@@ -1,0 +1,36 @@
+@Metadata.allowExtensions: true
+@Metadata.ignorePropagatedAnnotations: true
+@EndUserText: {
+  label: 'Attachment Service'
+}
+@ObjectModel: {
+  sapObjectNodeType.name: 'ZZCCHATTACH'
+}
+@AccessControl.authorizationCheck: #MANDATORY
+define root view entity ZZC_ATTACHMENT
+  provider contract transactional_query
+  as projection on ZZR_ATTACHMENT
+{
+  key UUID,
+  Description,
+  @Semantics: {
+    user.createdBy: true
+  }
+  LocalCreatedBy,
+  @Semantics: {
+    systemDateTime.createdAt: true
+  }
+  LocalCreatedAt,
+  @Semantics: {
+    user.localInstanceLastChangedBy: true
+  }
+  LocalLastChangedBy,
+  @Semantics: {
+    systemDateTime.localInstanceLastChangedAt: true
+  }
+  LocalLastChangedAt,
+  @Semantics: {
+    systemDateTime.lastChangedAt: true
+  }
+  LastChangedAt
+}

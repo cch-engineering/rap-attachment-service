@@ -1,0 +1,48 @@
+managed implementation in class ZZBP_R_ATTACHMENT unique;
+strict ( 2 );
+auxiliary class zcl_ch_aux_attachment;
+with draft;
+extensible;
+define behavior for ZZR_ATTACHMENT alias Attachment
+persistent table ZZATTACHMENT
+extensible
+with additional save with full data
+draft table ZZATTACHMENT_D
+etag master LocalLastChangedAt
+lock master total etag LastChangedAt
+authorization master( global )
+{
+  field ( readonly )
+   UUID,
+   LocalCreatedBy,
+   LocalCreatedAt,
+   LocalLastChangedBy,
+   LocalLastChangedAt,
+   LastChangedAt;
+
+  field ( numbering : managed )
+   UUID;
+
+
+  create;
+  update;
+  delete;
+
+  draft action Activate optimized with additional implementation;
+  draft action Discard with additional implementation;
+  draft action Edit;
+  draft action Resume;
+  draft determine action Prepare;
+
+  mapping for ZZATTACHMENT corresponding extensible
+  {
+    UUID = uuid;
+    Description = description;
+    LocalCreatedBy = local_created_by;
+    LocalCreatedAt = local_created_at;
+    LocalLastChangedBy = local_last_changed_by;
+    LocalLastChangedAt = local_last_changed_at;
+    LastChangedAt = last_changed_at;
+  }
+
+}

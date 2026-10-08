@@ -1,0 +1,29 @@
+class ZCL_CH_IM_ATT_SRV definition
+  public
+  final
+  create public .
+
+public section.
+
+  interfaces IF_BADI_INTERFACE .
+  interfaces IF_EX_CV_ODATA_ATTACHMENT_AUTH .
+protected section.
+private section.
+ENDCLASS.
+
+
+
+CLASS ZCL_CH_IM_ATT_SRV IMPLEMENTATION.
+
+
+  method IF_EX_CV_ODATA_ATTACHMENT_AUTH~CHECK_AUTHORIZATION.
+
+    cv_no_authorization = abap_false.
+  endmethod.
+
+
+  method IF_EX_CV_ODATA_ATTACHMENT_AUTH~CHECK_USER_AUTHORIZATION.
+
+
+  endmethod.
+ENDCLASS.

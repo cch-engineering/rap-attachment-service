@@ -1,0 +1,216 @@
+CLASS zcl_ch_aux_attachment DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PRIVATE
+  FOR BEHAVIOR OF zzr_attachment.
+
+  PUBLIC SECTION.
+    TYPES: BEGIN OF ENUM action STRUCTURE cs_actions,
+             unknown  VALUE IS INITIAL,
+             activate VALUE 10,
+           END OF ENUM action STRUCTURE cs_actions.
+
+    TYPES: BEGIN OF ts_helper,
+             att_chg          TYPE REQUEST FOR CHANGE zzr_attachment,
+             att_delete	      TYPE REQUEST FOR DELETE zzr_attachment,
+             act_activate_key TYPE TABLE FOR ACTION IMPORT zzr_attachment\\attachment~activate,
+             act_discard_key  TYPE TABLE FOR ACTION IMPORT zzr_attachment\\attachment~discard,
+             reported_early   TYPE RESPONSE FOR REPORTED EARLY zzr_attachment,
+             reported_late    TYPE RESPONSE FOR REPORTED LATE zzr_attachment,
+             failed_early     TYPE RESPONSE FOR FAILED EARLY zzr_attachment,
+             failed_late      TYPE RESPONSE FOR FAILED LATE zzr_attachment,
+             discard_key      TYPE TABLE FOR ACTION IMPORT zzr_attachment\\attachment~Discard,
+           END OF ts_helper.
+
+    CLASS-METHODS get_instance RETURNING VALUE(ro_instance) TYPE REF TO zcl_ch_aux_attachment.
+    METHODS set_action IMPORTING iv_action TYPE action.
+    METHODS get_action RETURNING VALUE(rv_action) TYPE action.
+    METHODS save IMPORTING is_create   TYPE ts_helper-att_chg
+                           is_update   TYPE ts_helper-att_chg
+                           is_delete   TYPE ts_helper-att_delete
+                 CHANGING  cs_reported TYPE ts_helper-reported_late
+                           cs_failed   TYPE ts_helper-failed_late.
+    METHODS activate IMPORTING it_key      TYPE ts_helper-act_activate_key
+                     CHANGING  cs_reported TYPE ts_helper-reported_early
+                               cs_failed   TYPE ts_helper-failed_early.
+    METHODS discard IMPORTING it_key      TYPE ts_helper-act_discard_key
+                    CHANGING  cs_reported TYPE ts_helper-reported_early
+                              cs_failed   TYPE ts_helper-failed_early.
+    METHODS init.
+
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+    CLASS-DATA mo_instance TYPE REF TO zcl_ch_aux_attachment.
+    DATA mv_action TYPE action.
+
+    DATA: BEGIN OF ms_buffered_data,
+            activate_key TYPE ts_helper-act_activate_key,
+          END OF ms_buffered_data.
+
+ENDCLASS.
+
+CLASS zcl_ch_aux_attachment IMPLEMENTATION.
+
+  METHOD get_instance.
+    IF mo_instance IS INITIAL.
+      CREATE OBJECT mo_instance.
+    ENDIF.
+    RETURN mo_instance.
+  ENDMETHOD.
+
+  METHOD set_action.
+    	mv_action = iv_action.
+  ENDMETHOD.
+
+  METHOD get_action.
+    rv_action = mv_action.
+  ENDMETHOD.
+
+  METHOD init.
+    	" Initialization logic here
+    CLEAR: mv_action, ms_buffered_data.
+  ENDMETHOD.
+
+  METHOD save.
+    DATA lt_dockey_doctype TYPE tt_odata_cv_s_object_info.
+
+    CASE mv_action.
+      WHEN cs_actions-activate.
+        		" Call the activate method with the buffered data
+
+        " sample code below is used if the attachment save is deferred during activation method to here		
+        TRY.
+            LOOP AT ms_buffered_data-activate_key ASSIGNING FIELD-SYMBOL(<ls_key>).
+              TRY.
+                  cl_system_uuid=>convert_uuid_c32_static( EXPORTING uuid = CONV #( <ls_key>-uuid )
+                                                                   IMPORTING uuid_c36 = DATA(lv_uuid_c36) ).
+                CATCH cx_uuid_error.
+                  lv_uuid_c36 = <ls_key>-uuid.
+              ENDTRY.
+
+              lt_dockey_doctype = VALUE #( BASE lt_dockey_doctype
+                                         ( objectkey = lv_uuid_c36
+                                           temp_objectkey = lv_uuid_c36
+                                          objecttype_long = 'ZCHOBJ01' ) ).
+            ENDLOOP.
+
+            cl_odata_cv_attachment_api=>get_instance( )->if_odata_cv_attachment_api~save(
+              EXPORTING iv_no_commit       = abap_true
+                        it_dockey_doctype  = lt_dockey_doctype
+              IMPORTING ev_success         = DATA(lv_success)
+                        et_messages        = DATA(lt_messages)
+                        et_failed_keys     = DATA(lt_failed_key) ).
+
+            IF lv_success <> abap_true.
+              cs_reported-attachment = VALUE #( BASE cs_reported-attachment
+                                                         FOR ls_message IN lt_messages
+                                                         ( uuid = ms_buffered_data-activate_key[ 1 ]-uuid
+                                                           %is_draft           = if_abap_behv=>mk-on
+                                                           %msg   = NEW zcx_attachment(
+                                                                 textid   = VALUE scx_t100key( msgid = ls_message-id
+                                                                                               msgno = ls_message-number
+                                                                                               attr1 = ls_message-message_v1
+                                                                                               attr2 = ls_message-message_v2
+                                                                                               attr3 = ls_message-message_v3
+                                                                                               attr4 = ls_message-message_v4 )
+                                                         severity = if_abap_behv_message=>severity-error ) ) ).
+              cs_failed-attachment = VALUE #( BASE cs_failed-attachment
+                                                       FOR ls_failed_key IN lt_failed_key
+                                                       ( uuid      = ls_failed_key-objectkey
+                                                         %is_draft = if_abap_behv=>mk-on ) ).
+*          APPEND VALUE #( uuid = it_key[ 1 ]-uuid
+*                          %is_draft           = if_abap_behv=>mk-on ) TO cs_failed-attachment.
+            ENDIF.
+          CATCH cx_odata_cv_base_exception INTO DATA(lx_odata_cv_base_exception).
+            cs_failed-attachment = VALUE #( BASE cs_failed-attachment
+                                                       FOR <ls_key2> IN ms_buffered_data-activate_key
+                                                       ( uuid      = <ls_key2>-uuid
+                                                         %is_draft = if_abap_behv=>mk-on ) ).
+        ENDTRY.
+    ENDCASE.
+  ENDMETHOD.
+
+  METHOD activate.
+    DATA lt_dockey_doctype TYPE tt_odata_cv_s_object_info.
+    mv_action = cs_actions-activate.
+
+    "defer the activation to save method if the late numbering RAP is used, as the numbering only generated later after this
+    "activate method
+    "And cl_odata_cv_attachment_api=>get_instance( )->if_odata_cv_attachment_api~save can not be called here due to it will trigger
+    "in update task, that prohibited by RAP
+    ms_buffered_data-activate_key = it_key.
+
+    IF it_key IS NOT INITIAL.
+      "unforunate have to force change a fields, as save_modified will not called if no entity field is changed, hence
+      "attachmend will not be saved, stay in draft
+      MODIFY ENTITIES OF zzr_attachment IN LOCAL MODE
+          ENTITY Attachment
+          UPDATE FROM VALUE #(
+  				FOR <ls_key> IN it_key
+  				( %key = CORRESPONDING #( <ls_key> )
+  				  LocalLastChangedBy = sy-uname
+  				  %control-LocalLastChangedBy = if_abap_behv=>mk-on  ) )
+           FAILED DATA(lt_failed)
+           REPORTED DATA(lt_reported).
+    ENDIF.
+
+  ENDMETHOD.
+
+  METHOD discard.
+    DATA lt_dockey_doctype TYPE tt_odata_cv_s_object_info.
+
+    " Discard method is called as well even though activate, hence skip this method is activate action is called
+    IF mv_action = cs_actions-activate.
+      RETURN.
+    ENDIF.
+
+    TRY.
+        LOOP AT it_key ASSIGNING FIELD-SYMBOL(<ls_key>).
+          TRY.
+              cl_system_uuid=>convert_uuid_c32_static( EXPORTING uuid = CONV #( <ls_key>-uuid )
+              		                                           IMPORTING uuid_c36 = DATA(lv_uuid_c36) ).
+            CATCH cx_uuid_error.
+              lv_uuid_c36 = <ls_key>-uuid.
+          ENDTRY.
+          		
+          lt_dockey_doctype = VALUE #( BASE lt_dockey_doctype
+                                     ( objectkey = lv_uuid_c36
+                                      objecttype_long = 'ZCHOBJ01' ) ).
+        ENDLOOP.
+
+        cl_odata_cv_attachment_api=>get_instance( )->if_odata_cv_attachment_api~cancel(
+          EXPORTING iv_no_commit       = abap_true
+                    it_dockey_doctype  = lt_dockey_doctype
+          IMPORTING ev_success         = DATA(lv_success)
+                    et_messages        = DATA(lt_messages)
+                    et_failed_keys     = DATA(lt_failed_key) ).
+
+        IF lv_success <> abap_true.
+          cs_reported-attachment = VALUE #( BASE cs_reported-attachment
+                                                     FOR ls_message IN lt_messages
+                                                     ( uuid = it_key[ 1 ]-uuid
+                                                       %is_draft           = if_abap_behv=>mk-on
+                                                       %msg   = NEW zcx_attachment(
+                                                             textid   = VALUE scx_t100key( msgid = ls_message-id
+                                                                                           msgno = ls_message-number
+                                                                                           attr1 = ls_message-message_v1
+                                                                                           attr2 = ls_message-message_v2
+                                                                                           attr3 = ls_message-message_v3
+                                                                                           attr4 = ls_message-message_v4 )
+                                                     severity = if_abap_behv_message=>severity-error ) ) ).
+          cs_failed-attachment = VALUE #( BASE cs_failed-attachment
+												   FOR ls_failed_key IN lt_failed_key
+												   ( uuid      = ls_failed_key-objectkey
+													 %is_draft = if_abap_behv=>mk-on ) ).
+*          APPEND VALUE #( uuid = it_key[ 1 ]-uuid
+*                          %is_draft           = if_abap_behv=>mk-on ) TO cs_failed-attachment.
+        ENDIF.
+      CATCH cx_odata_cv_base_exception INTO DATA(lx_odata_cv_base_exception).
+        cs_failed-attachment = VALUE #( BASE cs_failed-attachment
+                                                   FOR <ls_key2> IN it_key
+                                                   ( uuid      = <ls_key2>-uuid
+                                                     %is_draft = if_abap_behv=>mk-on ) ).
+    ENDTRY.
+
+  ENDMETHOD.
+ENDCLASS.

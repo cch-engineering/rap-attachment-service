@@ -1,0 +1,9 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "SAP Object Type ZZCCHATTACH",
+    "originalLanguage": "en"
+  },
+  "typeCategory": "businessObject",
+  "name": "ZZCCHATTACH"
+}

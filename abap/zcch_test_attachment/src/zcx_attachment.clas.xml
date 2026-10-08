@@ -1,0 +1,293 @@
+CLASS zcx_attachment DEFINITION
+  PUBLIC
+  INHERITING FROM cx_static_check
+  CREATE PUBLIC.
+
+  PUBLIC SECTION.
+    INTERFACES if_abap_behv_message.
+
+    CONSTANTS: BEGIN OF cs_not_all_questions_answered,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '014',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_not_all_questions_answered.
+
+    CONSTANTS: BEGIN OF cs_action_not_allowed,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '015',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_action_not_allowed.
+
+    CONSTANTS: BEGIN OF cs_print_form_undefined,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '016',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_print_form_undefined.
+
+    CONSTANTS: BEGIN OF cs_notif_agent_not_maintained,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '017',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_notif_agent_not_maintained.
+
+    CONSTANTS: BEGIN OF cs_inspected_date_error,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '031',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_inspected_date_error.
+
+    CONSTANTS: BEGIN OF cs_submit_date_error,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '058',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_submit_date_error.
+
+    CONSTANTS: BEGIN OF cs_generic_message,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '000',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_generic_message.
+
+    CONSTANTS: BEGIN OF cs_checklist_type_empty_space,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '039',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_checklist_type_empty_space.
+
+    CONSTANTS: BEGIN OF cs_field_is_mandatory,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '048',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_field_is_mandatory.
+
+    CONSTANTS: BEGIN OF cs_further_action_required,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '049',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_further_action_required.
+
+    CONSTANTS: BEGIN OF cs_correction_due_date_le,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '050',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_correction_due_date_le.
+
+    CONSTANTS: BEGIN OF cs_error_generation_uuid,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '051',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_error_generation_uuid.
+
+    CONSTANTS: BEGIN OF cs_duplicate_equipment,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '052',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_duplicate_equipment.
+
+    CONSTANTS: BEGIN OF cs_open_correction_action,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '055',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_open_correction_action.
+
+    CONSTANTS: BEGIN OF cs_submit_correction_due_date,
+                  ##MG_MISSING
+                  msgid TYPE symsgid      VALUE 'ZEH01',
+                  msgno TYPE symsgno      VALUE '061',
+                  attr1 TYPE scx_attrname VALUE '',
+                  attr2 TYPE scx_attrname VALUE '',
+                  attr3 TYPE scx_attrname VALUE '',
+                  attr4 TYPE scx_attrname VALUE '',
+                END OF cs_submit_correction_due_date.
+
+    CONSTANTS: BEGIN OF cs_action_person_not_allowed,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '062',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_action_person_not_allowed.
+
+    CONSTANTS: BEGIN OF cs_invalid_combi_plant_loc,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '063',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_invalid_combi_plant_loc.
+
+    CONSTANTS: BEGIN OF cs_duplicate_inspector,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '067',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_duplicate_inspector.
+
+    CONSTANTS: BEGIN OF cs_action_same_assignee,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '069',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_action_same_assignee.
+
+    CONSTANTS: BEGIN OF cs_action_not_allow_chg_assgn,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '070',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_action_not_allow_chg_assgn.
+
+    CONSTANTS: BEGIN OF cs_action_same_due_date,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '071',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_action_same_due_date.
+
+    CONSTANTS: BEGIN OF cs_action_missing_evidence,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '073',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_action_missing_evidence.
+
+    CONSTANTS: BEGIN OF cs_action_not_allow_reopen,
+                 ##MG_MISSING
+                 msgid TYPE symsgid      VALUE 'ZEH01',
+                 msgno TYPE symsgno      VALUE '074',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF cs_action_not_allow_reopen.
+
+    METHODS constructor
+      IMPORTING textid    LIKE if_t100_message=>t100key         OPTIONAL
+                attr1     TYPE string                           OPTIONAL
+                attr2     TYPE string                           OPTIONAL
+                attr3     TYPE string                           OPTIONAL
+                attr4     TYPE string                           OPTIONAL
+                !previous LIKE previous                         OPTIONAL
+                msgv4     TYPE symsgv                           OPTIONAL
+                msgv3     TYPE symsgv                           OPTIONAL
+                msgv2     TYPE symsgv                           OPTIONAL
+                msgv1     TYPE symsgv                           OPTIONAL
+                severity  TYPE if_abap_behv_message=>t_severity OPTIONAL.
+
+    DATA mv_attr1 TYPE string.
+    DATA mv_attr2 TYPE string.
+    DATA mv_attr3 TYPE string.
+    DATA mv_attr4 TYPE string.
+
+  PROTECTED SECTION.
+
+  PRIVATE SECTION.
+
+ENDCLASS.
+
+
+
+CLASS zcx_attachment IMPLEMENTATION.
+
+
+  METHOD constructor ##ADT_SUPPRESS_GENERATION.
+    super->constructor( previous = previous ).
+    mv_attr1 = attr1.
+    mv_attr2 = attr2.
+    mv_attr3 = attr3.
+    mv_attr4 = attr4.
+    if_t100_dyn_msg~msgv1 = msgv1.
+    if_t100_dyn_msg~msgv2 = msgv2.
+    if_t100_dyn_msg~msgv3 = msgv3.
+    if_t100_dyn_msg~msgv4 = msgv4.
+    if_t100_dyn_msg~msgty = severity.
+
+    if_abap_behv_message~m_severity = severity.
+    CLEAR me->textid.
+    IF textid IS INITIAL.
+      if_t100_message~t100key = if_t100_message=>default_textid.
+    ELSE.
+      if_t100_message~t100key-attr1 = COND #( WHEN msgv1 IS NOT INITIAL THEN 'IF_T100_DYN_MSG~MSGV1' ).
+      if_t100_message~t100key-attr2 = COND #( WHEN msgv2 IS NOT INITIAL THEN 'IF_T100_DYN_MSG~MSGV2' ).
+      if_t100_message~t100key-attr3 = COND #( WHEN msgv3 IS NOT INITIAL THEN 'IF_T100_DYN_MSG~MSGV3' ).
+      if_t100_message~t100key-attr4 = COND #( WHEN msgv4 IS NOT INITIAL THEN 'IF_T100_DYN_MSG~MSGV4' ).
+      if_t100_message~t100key-msgid = textid-msgid.
+      if_t100_message~t100key-msgno = textid-msgno.
+    ENDIF.
+  ENDMETHOD.
+ENDCLASS.

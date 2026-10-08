@@ -1,0 +1,56 @@
+CLASS lsc_zzr_attachment DEFINITION INHERITING FROM cl_abap_behavior_saver_failed.
+
+  PROTECTED SECTION.
+
+    METHODS save_modified REDEFINITION.
+
+    METHODS cleanup_finalize REDEFINITION.
+
+ENDCLASS.
+
+CLASS lsc_zzr_attachment IMPLEMENTATION.
+
+  METHOD cleanup_finalize.
+    zcl_ch_aux_attachment=>get_instance( )->init( ).
+  ENDMETHOD.
+
+  METHOD save_modified.
+    zcl_ch_aux_attachment=>get_instance( )->save( EXPORTING is_create = create
+                                                            is_update = update
+                                                            is_delete = delete
+                                                  CHANGING  cs_failed = failed
+                                                            cs_reported = reported ).
+  ENDMETHOD.
+
+ENDCLASS.
+
+CLASS lhc_zzr_attachment DEFINITION INHERITING FROM cl_abap_behavior_handler.
+  PRIVATE SECTION.
+    METHODS:
+      get_global_authorizations FOR GLOBAL AUTHORIZATION
+        IMPORTING
+        REQUEST requested_authorizations FOR Attachment
+        RESULT result.
+    METHODS Activate FOR MODIFY
+      IMPORTING keys FOR ACTION Attachment~Activate.
+    METHODS Discard FOR MODIFY
+      IMPORTING keys FOR ACTION Attachment~Discard.
+ENDCLASS.
+
+CLASS lhc_zzr_attachment IMPLEMENTATION.
+  METHOD get_global_authorizations.
+  ENDMETHOD.
+
+  METHOD Activate.
+    zcl_ch_aux_attachment=>get_instance( )->activate( EXPORTING it_key = keys
+                                                 CHANGING  cs_failed = failed
+                                                           cs_reported = reported ).
+  ENDMETHOD.
+
+  METHOD Discard.
+    zcl_ch_aux_attachment=>get_instance( )->discard( EXPORTING it_key = keys
+                                                     CHANGING  cs_failed = failed
+                                                               cs_reported = reported ).
+  ENDMETHOD.
+
+ENDCLASS.

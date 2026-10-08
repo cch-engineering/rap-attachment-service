@@ -1,0 +1,2 @@
+{"version":3,"file":"ObjectPageExt.controller.js","names":["sap","ui","define","ControllerExtension","extend","override","onInit"],"sources":["ObjectPageExt-dbg.controller.js"],"mappings":"AAAAA,IAAIC,GAAGC,OAAO,CAAC,uCAAwC,SAAUC,GAChE,aAEA,OAAOA,EAAoBC,+
+OAAO,iDAAkD,CAEnFC,SAAU,CAMTC,OAAQ,WAmBR,IAGH","ignoreList":[]}                                                                                                                                                                                                

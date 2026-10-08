@@ -1,0 +1,2 @@
+sap.ui.define(["sap/ui/core/mvc/ControllerExtension"],function(e){"use strict";return e.extend("attachmentservice.ext.controller.ObjectPageExt",{override:{onInit:function(){}}})});                                                                           
+//# sourceMappingURL=ObjectPageExt.controller.js.map                                                                                                                                                                                                           
