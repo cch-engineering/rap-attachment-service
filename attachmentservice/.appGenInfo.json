@@ -1,0 +1,29 @@
+{
+  "generationParameters": {
+    "generationDate": "Wed Oct 07 2026 15:43:48 GMT+0800 (Malaysia Time)",
+    "generatorPlatform": "Visual Studio Code",
+    "serviceType": "SAP System (ABAP On-Premise)",
+    "metadataFilename": "",
+    "serviceUrl": "https://appsrv63-eam.rizing.io:44301/sap/opu/odata4/sap/zzui_cchattach_o4/srvd/sap/zzui_cchattach_o4/0001/",
+    "appName": "attachmentservice",
+    "appTitle": "Test Attachment Service",
+    "appDescription": "Test Attachment Service",
+    "appNamespace": "",
+    "ui5Theme": "sap_horizon",
+    "ui5Version": "1.136.10",
+    "enableEslint": true,
+    "enableTypeScript": false,
+    "showMockDataInfo": true,
+    "generatorVersion": "1.33.0",
+    "template": "List Report Page V4",
+    "generatorName": "SAP Fiori Application Generator",
+    "entityRelatedConfig": [
+      {
+        "type": "Main Entity",
+        "value": "Attachment"
+      }
+    ],
+    "launchText": "To launch the generated application, run the following from the generated application root folder:\n\n```\n    npm start\n```",
+    "valueHelpDownloaded": true
+  }
+}
